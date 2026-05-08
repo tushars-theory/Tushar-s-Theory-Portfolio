@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tushar's Theory — Since 2022</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Abril+Fatface&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================
+   CSS VARIABLES & RESET
+============================================ */
+:root {
+  --paper: #f4ecd8;
+  --paper-dark: #e8dcc0;
+  --paper-darker: #d9c9a3;
+  --ink: #1a1209;
+  --ink-mid: #3d2f1a;
+  --ink-light: #6b5540;
+  --brown: #7a5c38;
+  --sepia: #8b6b3d;
+  --cream: #faf6ec;
+  --rule: #b8a07a;
+  --rule-dark: #8a7050;
+
+  --font-masthead: 'UnifrakturMaguntia', serif;
+  --font-headline: 'Abril Fatface', serif;
+  --font-display: 'Playfair Display', serif;
+  --font-body: 'Crimson Text', serif;
+  --font-alt: 'Merriweather', serif;
+  --font-script: 'Pinyon Script', cursive;
+
+  --col-gap: 1.5rem;
+  --section-pad: 3rem 2rem;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  line-height: 1.7;
+  overflow-x: hidden;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  mix-blend-mode: multiply;
+  opacity: 0.6;
+}
+
+/* ============================================
+   ANIMATIONS
+============================================ */
+@keyframes mastReveal {
+  from { opacity: 0; transform: scaleY(0.7) translateY(-10px); }
+  to   { opacity: 1; transform: scaleY(1) translateY(0); }
+}
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes stampIn {
+  from { opacity: 0; transform: scale(1.18) rotate(-2deg); }
+  to   { opacity: 1; transform: scale(1) rotate(-8deg); }
+}
+@keyframes barGrow {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+@keyframes lineReveal {
+  from { stroke-dashoffset: 500; }
+  to   { stroke-dashoffset: 0; }
+}
+
+/* Scroll reveal */
+.anim-item {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(.22,.68,0,1.1);
+}
+.anim-item.anim-delay-1 { transition-delay: 0.1s; }
+.anim-item.anim-delay-2 { transition-delay: 0.2s; }
+.anim-item.anim-delay-3 { transition-delay: 0.32s; }
+.anim-item.anim-delay-4 { transition-delay: 0.44s; }
+.anim-item.anim-delay-5 { transition-delay: 0.56s; }
+.anim-item.visible { opacity: 1; transform: translateY(0); }
+
+.animate-section {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s cubic-bezier(.22,.68,0,1.1), transform 0.7s cubic-bezier(.22,.68,0,1.1);
+}
+.animate-section.visible { opacity: 1; transform: translateY(0); }
+
+/* ============================================
+   TYPOGRAPHY & SHARED
+============================================ */
+h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 700; line-height: 1.18; }
+p { font-size: 1rem; line-height: 1.75; color: var(--ink-mid); }
+a { color: inherit; text-decoration: none; }
+
+.rule { border: none; border-top: 2px solid var(--ink); margin: 0.4rem 0; }
+.rule-thin { border-top-width: 1px; border-color: var(--rule); }
+.rule-triple {
+  border: none; height: 8px;
+  border-top: 3px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  margin: 0.5rem 0; position: relative;
+}
+.rule-triple::after {
+  content: ''; position: absolute; top: 2px; left: 0; right: 0;
+  height: 1px; background: var(--ink);
+}
+
+.section-label {
+  font-family: var(--font-body); font-size: 0.65rem; font-weight: 600;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-light);
+  text-align: center; padding: 0.2rem 0; display: block;
+}
+.section-headline {
+  font-family: var(--font-headline); font-size: clamp(1.8rem, 4vw, 3rem);
+  line-height: 1.1; color: var(--ink); text-transform: uppercase;
+}
+.section-sub {
+  font-family: var(--font-body); font-style: italic;
+  font-size: 0.85rem; color: var(--ink-light); margin-top: 0.3rem;
+}
+.section-header { text-align: center; margin-bottom: 1.5rem; }
+.newspaper-section { padding: var(--section-pad); max-width: 1200px; margin: 0 auto; position: relative; }
+
+/* ============================================
+   HERO
+============================================ */
+#hero { background: var(--paper); border-bottom: 3px double var(--ink); }
+
+.masthead-top {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.6rem 2rem; border-bottom: 1px solid var(--rule-dark);
+  font-family: var(--font-body); font-size: 0.7rem; color: var(--ink-light);
+  flex-wrap: wrap; gap: 0.3rem;
+  animation: fadeIn 0.8s 0s both;
+}
+
+.masthead-title-wrap {
+  text-align: center; padding: 1.2rem 2rem 0.5rem;
+  border-bottom: 2px solid var(--ink);
+  animation: mastReveal 1.1s cubic-bezier(.16,1,.3,1) 0.1s both;
+}
+.masthead-name {
+  font-family: var(--font-masthead); font-size: clamp(2.8rem, 9vw, 7.5rem);
+  color: var(--ink); line-height: 1; text-shadow: 2px 2px 0 rgba(0,0,0,0.08);
+}
+.masthead-rule-wrap { display: flex; align-items: center; gap: 1rem; margin: 0.4rem 0; }
+.masthead-rule-wrap .rule { flex: 1; }
+.masthead-since { font-family: var(--font-script); font-size: 1.5rem; color: var(--brown); white-space: nowrap; }
+
+.masthead-meta {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.4rem 2rem; border-top: 1px solid var(--rule); border-bottom: 2px solid var(--ink);
+  font-family: var(--font-body); font-size: 0.65rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--ink-light); flex-wrap: wrap; gap: 0.3rem;
+  animation: fadeIn 1s 0.4s both;
+}
+
+.breaking-bar {
+  display: flex; align-items: stretch;
+  border-bottom: 1px solid var(--rule);
+  animation: fadeSlideUp 0.7s 0.6s both;
+}
+.breaking-label {
+  background: var(--ink); color: var(--paper); font-family: var(--font-body);
+  font-size: 0.65rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;
+  padding: 0.3rem 0.8rem; white-space: nowrap; display: flex; align-items: center;
+}
+.breaking-text { padding: 0.3rem 1rem; font-family: var(--font-body); font-size: 0.78rem; color: var(--ink-mid); font-style: italic; }
+
+.hero-content {
+  display: grid; grid-template-columns: 1fr 2fr 1fr;
+  gap: 0; min-height: 65vh;
+  animation: fadeSlideUp 0.9s 0.5s both;
+}
+.hero-side {
+  padding: 2rem 1.2rem; border-right: 1px solid var(--rule-dark);
+  display: flex; flex-direction: column; gap: 1.2rem;
+}
+.hero-side:last-child { border-right: none; border-left: 1px solid var(--rule-dark); }
+.hero-center {
+  padding: 2.5rem 2rem; text-align: center;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+}
+.hero-eyebrow { font-family: var(--font-body); font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--ink-light); margin-bottom: 0.8rem; }
+.hero-headline { font-family: var(--font-headline); font-size: clamp(2.5rem, 7vw, 5.5rem); line-height: 1.05; color: var(--ink); text-align: center; margin-bottom: 1rem; }
+.hero-tagline { font-family: var(--font-display); font-style: italic; font-size: clamp(0.9rem, 2vw, 1.25rem); color: var(--brown); margin-bottom: 1.5rem; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 0.5rem 1.5rem; }
+.hero-roles { display: flex; gap: 1rem; align-items: center; font-family: var(--font-body); font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-light); }
+.hero-roles .dot { opacity: 0.4; }
+
+.side-article-title { font-family: var(--font-display); font-size: 0.9rem; font-weight: 700; line-height: 1.3; margin-bottom: 0.4rem; color: var(--ink); }
+.side-article-body { font-size: 0.75rem; line-height: 1.6; color: var(--ink-light); font-style: italic; }
+.side-label { font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--rule-dark); margin-bottom: 0.3rem; display: block; }
+
+.hero-btns { margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; animation: fadeSlideUp 0.7s 0.9s both; }
+
+/* ============================================
+   ABOUT
+============================================ */
+#about { background: var(--paper-dark); border-top: 3px double var(--ink); border-bottom: 3px double var(--ink); }
+
+.about-grid { display: grid; grid-template-columns: 1fr 1.8fr; gap: 2.5rem; align-items: start; max-width: 1100px; margin: 0 auto; }
+
+.about-photo { width: 100%; aspect-ratio: 3/4; background: var(--paper-darker); position: relative; overflow: hidden; border: 1px solid var(--rule-dark); }
+.about-photo::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 50%, rgba(10,5,0,0.65) 100%); z-index: 2; pointer-events: none; }
+.about-photo img { width: 100%; height: 100%; object-fit: cover; filter: sepia(40%) contrast(1.1) brightness(0.9); transition: transform 0.6s ease, filter 0.6s ease; display: block; }
+.about-photo:hover img { transform: scale(1.04); filter: sepia(20%) contrast(1.05); }
+
+.photo-caption { font-family: var(--font-body); font-style: italic; font-size: 0.7rem; color: var(--ink-light); text-align: center; margin-top: 0.5rem; padding-top: 0.3rem; border-top: 1px solid var(--rule); }
+
+.about-text .drop-cap:first-letter { float: left; font-family: var(--font-headline); font-size: 4.5rem; line-height: 0.8; padding: 0.1rem 0.3rem 0 0; color: var(--ink); }
+.about-byline { font-family: var(--font-body); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-light); margin: 0.6rem 0 1rem; display: block; }
+.about-body { columns: 2; column-gap: var(--col-gap); column-rule: 1px solid var(--rule); }
+
+/* ============================================
+   WORKS
+============================================ */
+#works { background: var(--cream); }
+
+.works-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+
+.project-card { display: flex; flex-direction: column; cursor: pointer; transition: transform 0.35s cubic-bezier(.22,.68,0,1.2); }
+.project-card:hover { transform: translateY(-5px); }
+
+.project-thumb { width: 100%; aspect-ratio: 16/10; position: relative; overflow: hidden; border: 1px solid var(--rule-dark); margin-bottom: 0.8rem; }
+.project-thumb::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 55%, rgba(10,5,0,0.6) 100%); z-index: 2; pointer-events: none; }
+.project-thumb::after { content: ''; position: absolute; inset: 0; background: var(--ink); opacity: 0; z-index: 3; transition: opacity 0.4s ease; }
+.project-card:hover .project-thumb::after { opacity: 0.1; }
+.project-thumb img { width: 100%; height: 100%; object-fit: cover; filter: sepia(30%); transition: transform 0.5s ease; display: block; }
+.project-card:hover .project-thumb img { transform: scale(1.05); }
+
+.project-label { font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-light); margin-bottom: 0.3rem; }
+.project-title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--ink); margin-bottom: 0.4rem; line-height: 1.2; transition: color 0.3s ease; }
+.project-card:hover .project-title { color: var(--brown); }
+.project-desc { font-size: 0.8rem; color: var(--ink-light); line-height: 1.6; font-style: italic; }
+.project-readmore { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--brown); margin-top: 0.6rem; display: inline-flex; align-items: center; gap: 0.3rem; border-bottom: 1px solid transparent; transition: border-color 0.3s ease, gap 0.3s ease; }
+.project-card:hover .project-readmore { border-color: var(--brown); gap: 0.5rem; }
+
+/* ============================================
+   INSTAGRAM INSIGHTS
+============================================ */
+#insights { background: var(--paper-dark); border-top: 3px double var(--ink); border-bottom: 3px double var(--ink); }
+
+.insights-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; max-width: 1100px; margin: 0 auto; }
+
+.graph-box { border: 1px solid var(--rule-dark); padding: 1.5rem; background: var(--paper); }
+.graph-title { font-family: var(--font-display); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.3rem; color: var(--ink); }
+.graph-meta { font-size: 0.65rem; color: var(--ink-light); font-style: italic; margin-bottom: 1.2rem; }
+
+.bar-chart { display: flex; align-items: flex-end; gap: 0.6rem; height: 140px; padding-bottom: 2rem; border-bottom: 1px solid var(--rule); position: relative; }
+.bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: flex-end; gap: 0.3rem; }
+.bar { width: 100%; background: linear-gradient(to top, var(--ink) 0%, var(--ink-mid) 100%); border-radius: 1px 1px 0 0; position: relative; transition: filter 0.3s ease; transform-origin: bottom; animation: barGrow 1s cubic-bezier(.22,.68,0,1.1) both; }
+.bar-wrap:hover .bar { filter: brightness(1.4); }
+.bar-label { font-size: 0.6rem; color: var(--ink-light); text-align: center; font-family: var(--font-body); }
+.bar-value { position: absolute; top: -1.2rem; left: 50%; transform: translateX(-50%); font-size: 0.6rem; font-family: var(--font-body); font-weight: 600; color: var(--ink); white-space: nowrap; }
+
+.line-graph-wrap { position: relative; height: 140px; border-bottom: 1px solid var(--rule); border-left: 1px solid var(--rule); margin-bottom: 1.5rem; }
+.line-graph-wrap svg { width: 100%; height: 100%; overflow: visible; }
+
+.graph-stats-row { display: flex; gap: 2rem; margin-top: 1rem; }
+.graph-stat { display: flex; flex-direction: column; }
+.graph-stat-num { font-family: var(--font-headline); font-size: 1.8rem; color: var(--ink); line-height: 1; }
+.graph-stat-label { font-size: 0.65rem; color: var(--ink-light); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 0.2rem; }
+.graph-stat-delta { font-size: 0.75rem; color: var(--brown); font-style: italic; margin-top: 0.1rem; }
+
+/* ============================================
+   PHOTO FEED
+============================================ */
+#feed { background: var(--paper); }
+
+.feed-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; }
+
+.feed-item { aspect-ratio: 1; background: var(--paper-darker); position: relative; overflow: hidden; cursor: pointer; border: 1px solid var(--rule); transition: transform 0.4s cubic-bezier(.22,.68,0,1.2); }
+.feed-item::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 40%, rgba(10,5,0,0.75) 100%); z-index: 2; transition: opacity 0.4s ease; }
+.feed-item:hover { transform: scale(1.03); }
+.feed-item:hover::before { opacity: 0.6; }
+
+.feed-item img { width: 100%; height: 100%; object-fit: cover; filter: sepia(30%); transition: transform 0.6s ease; display: block; }
+.feed-item:hover img { transform: scale(1.08); }
+
+.feed-item:nth-child(1) { grid-column: span 2; grid-row: span 2; }
+
+/* ============================================
+   SHORT FILMS
+============================================ */
+#films { background: var(--paper-dark); border-top: 3px double var(--ink); }
+
+.films-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2.5rem; max-width: 1100px; margin: 0 auto; }
+
+.film-card { display: flex; flex-direction: column; transition: transform 0.35s cubic-bezier(.22,.68,0,1.2); }
+.film-card:hover { transform: translateY(-4px); }
+
+.film-frame { width: 100%; aspect-ratio: 16/9; background: var(--ink); position: relative; overflow: hidden; border: 2px solid var(--ink); margin-bottom: 1rem; cursor: pointer; }
+.film-frame::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(255,255,255,0.05) 0%, transparent 70%); z-index: 2; }
+
+.play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 56px; height: 56px; border: 2px solid rgba(255,255,255,0.8); border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 3; transition: all 0.3s ease; background: rgba(0,0,0,0.3); }
+.play-btn::after { content: ''; width: 0; height: 0; border-style: solid; border-width: 10px 0 10px 18px; border-color: transparent transparent transparent rgba(255,255,255,0.9); margin-left: 4px; }
+.film-frame:hover .play-btn { background: rgba(0,0,0,0.6); transform: translate(-50%,-50%) scale(1.1); border-color: white; }
+
+.film-rating { display: flex; gap: 2px; margin-bottom: 0.4rem; }
+.star { width: 10px; height: 10px; background: var(--ink); clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); }
+.star.empty { background: var(--rule); }
+
+.film-title { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; color: var(--ink); margin-bottom: 0.3rem; line-height: 1.2; transition: color 0.3s ease; }
+.film-card:hover .film-title { color: var(--brown); }
+.film-meta { font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-light); margin-bottom: 0.6rem; }
+.film-review { font-size: 0.82rem; color: var(--ink-mid); line-height: 1.65; font-style: italic; }
+
+/* ============================================
+   CTA
+============================================ */
+#cta { background: var(--paper); border-top: 3px double var(--ink); border-bottom: 3px double var(--ink); }
+
+.cta-inner { max-width: 800px; margin: 0 auto; text-align: center; padding: 4rem 2rem; border: 3px double var(--ink); position: relative; }
+.cta-inner::before { content: '❧'; position: absolute; top: -1.1rem; left: 50%; transform: translateX(-50%); background: var(--paper); padding: 0 1rem; font-size: 1.5rem; color: var(--ink-light); }
+
+.cta-eyebrow { font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--ink-light); margin-bottom: 1rem; display: block; }
+.cta-headline { font-family: var(--font-headline); font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.1; color: var(--ink); text-transform: uppercase; margin-bottom: 1rem; }
+.cta-sub { font-family: var(--font-display); font-style: italic; font-size: 1rem; color: var(--brown); margin-bottom: 2rem; }
+
+.cta-stamp { width: 80px; height: 80px; border: 3px solid var(--brown); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; transform: rotate(-8deg); opacity: 0.7; animation: stampIn 0.9s 0.3s both; }
+.cta-stamp-inner { font-family: var(--font-body); font-size: 0.52rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--brown); text-align: center; line-height: 1.4; }
+
+.cta-btn {
+  display: inline-block; border: 2px solid var(--ink); padding: 0.8rem 2.5rem;
+  font-family: var(--font-body); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.25em;
+  text-transform: uppercase; color: var(--ink); cursor: pointer; position: relative;
+  transition: all 0.3s cubic-bezier(.22,.68,0,1.2); background: transparent; margin: 0.4rem; overflow: hidden;
+}
+.cta-btn::before { content: ''; position: absolute; inset: 0; background: var(--ink); transform: scaleX(0); transform-origin: left; transition: transform 0.35s cubic-bezier(.22,.68,0,1.1); z-index: -1; }
+.cta-btn:hover { color: var(--paper); transform: translateY(-2px); box-shadow: 3px 3px 0 var(--ink-mid); }
+.cta-btn:hover::before { transform: scaleX(1); }
+.cta-btn:active { transform: translateY(0); box-shadow: none; }
+
+.cta-btn-secondary { border-color: var(--brown); color: var(--brown); }
+.cta-btn-secondary::before { background: var(--brown); }
+.cta-btn-secondary:hover { color: var(--paper); box-shadow: 3px 3px 0 var(--brown); }
+
+/* ============================================
+   PARALLAX DIVIDER
+============================================ */
+.parallax-divider {
+  background: var(--ink); padding: 2.5rem 2rem; text-align: center;
+  position: relative; overflow: hidden;
+}
+.parallax-divider::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--ink) 0%, var(--ink-mid) 100%); }
+.parallax-divider-text { position: relative; z-index: 1; font-family: var(--font-script); font-size: clamp(1.5rem, 4vw, 2.8rem); color: var(--paper-dark); opacity: 0.85; }
+
+/* ============================================
+   FOOTER
+============================================ */
+footer { background: var(--ink); color: var(--paper); padding: 2rem; text-align: center; }
+.footer-inner { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+.footer-rule { width: 100%; border: none; border-top: 1px solid rgba(244,236,216,0.2); }
+.footer-masthead { font-family: var(--font-masthead); font-size: 2rem; color: var(--paper); opacity: 0.8; }
+.footer-tagline { font-family: var(--font-script); font-size: 1.2rem; color: var(--paper); opacity: 0.6; }
+.footer-links { display: flex; gap: 2rem; font-family: var(--font-body); font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.5; flex-wrap: wrap; justify-content: center; }
+.footer-links a { color: var(--paper); transition: opacity 0.3s ease; }
+.footer-links a:hover { opacity: 1; }
+.footer-credit { font-family: var(--font-body); font-style: italic; font-size: 0.78rem; color: var(--paper); opacity: 0.4; margin-top: 0.5rem; }
+
+/* ============================================
+   RESPONSIVE
+============================================ */
+@media (max-width: 900px) {
+  :root { --section-pad: 2rem 1.2rem; }
+  .hero-content { grid-template-columns: 1fr; }
+  .hero-side { display: none; }
+  .about-grid { grid-template-columns: 1fr; }
+  .about-body { columns: 1; }
+  .works-grid { grid-template-columns: repeat(2, 1fr); }
+  .insights-grid { grid-template-columns: 1fr; }
+  .feed-grid { grid-template-columns: repeat(3, 1fr); }
+  .feed-item:nth-child(1) { grid-column: span 2; }
+  .films-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .masthead-name { font-size: 2.2rem; }
+  .works-grid { grid-template-columns: 1fr; }
+  .feed-grid { grid-template-columns: repeat(2, 1fr); }
+  .feed-item:nth-child(1) { grid-column: span 2; }
+  .hero-roles { flex-direction: column; gap: 0.2rem; }
+  .hero-roles .dot { display: none; }
+}
+
+/* ============================================
+   INTRO — CINEMATIC PAPER BURN
+============================================ */
+@media (prefers-reduced-motion: reduce) {
+  #intro-overlay { display: none !important; }
+}
+
+#intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  overflow: hidden;
+  pointer-events: all;
+  background: #0c0a06;
+}
+
+/* Paper layer that gets burned away */
+#intro-paper {
+  position: absolute;
+  inset: 0;
+  background: var(--paper);
+  z-index: 2;
+}
+
+/* Canvas for fire/burn drawing */
+#burn-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* Dark background revealed under paper */
+#intro-dark {
+  position: absolute;
+  inset: 0;
+  background: #0c0a06;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  z-index: 1;
+}
+
+/* Brand reveal */
+#intro-brand {
+  font-family: var(--font-masthead);
+  font-size: clamp(2.2rem, 7vw, 5.5rem);
+  color: rgba(244,236,216,0);
+  letter-spacing: 0.02em;
+  text-align: center;
+  transition: color 1.8s ease, text-shadow 1.8s ease;
+  text-shadow: 0 0 0 rgba(200,140,60,0);
+  user-select: none;
+  position: relative;
+  z-index: 4;
+}
+#intro-brand.lit {
+  color: rgba(244,236,216,0.92);
+  text-shadow:
+    0 0 60px rgba(220,150,50,0.55),
+    0 0 120px rgba(200,120,30,0.3),
+    0 0 8px rgba(255,220,160,0.6);
+}
+#intro-brand.ember {
+  color: rgba(244,236,216,1);
+  text-shadow:
+    0 0 40px rgba(255,180,60,0.9),
+    0 0 80px rgba(255,120,20,0.5),
+    0 0 6px rgba(255,230,180,0.8);
+}
+
+#intro-since {
+  font-family: var(--font-script);
+  font-size: clamp(1rem, 2.5vw, 1.7rem);
+  color: rgba(160,110,40,0);
+  transition: color 1.8s ease 0.5s, text-shadow 1.8s ease 0.5s;
+  letter-spacing: 0.3em;
+  user-select: none;
+  position: relative;
+  z-index: 4;
+  text-shadow: none;
+}
+#intro-since.lit {
+  color: rgba(200,150,70,0.85);
+  text-shadow: 0 0 30px rgba(200,140,50,0.4);
+}
+
+/* Skip button */
+#skip-intro {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 10002;
+  background: transparent;
+  border: 1px solid rgba(244,236,216,0.2);
+  color: rgba(244,236,216,0.35);
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  padding: 0.45rem 1.2rem;
+  cursor: pointer;
+  transition: border-color 0.3s, color 0.3s;
+  opacity: 0;
+  animation: fadeIn 0.4s 1.5s ease both;
+}
+#skip-intro:hover {
+  border-color: rgba(244,236,216,0.5);
+  color: rgba(244,236,216,0.65);
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================
+     INTRO: MATCH + PAPER BURN ANIMATION
+     Tip: change CONFIG in the <script> below
+============================================ -->
+<div id="intro-overlay" aria-hidden="true">
+  <div id="intro-dark">
+    <div id="intro-brand"></div>
+    <div id="intro-since"></div>
+  </div>
+  <div id="intro-paper"></div>
+  <canvas id="burn-canvas"></canvas>
+  <button id="skip-intro">Skip</button>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="masthead-top">
+    <span>Vol. IV · No. 22</span>
+    <span>Filmmaker · Editor · Web Developer</span>
+    <span>Est. 2022 · Digital Edition</span>
+  </div>
+
+  <div class="masthead-title-wrap">
+    <span class="masthead-name">Tushar's Theory</span>
+    <div class="masthead-rule-wrap">
+      <hr class="rule">
+      <span class="masthead-since">Since 2022</span>
+      <hr class="rule">
+    </div>
+  </div>
+
+  <div class="masthead-meta">
+    <span>Saturday, May 9, 2026</span>
+    <span>Theory · Film · Web · Design</span>
+    <span>Free to the World</span>
+  </div>
+
+  <div class="breaking-bar">
+    <div class="breaking-label">Breaking</div>
+    <div class="breaking-text">A filmmaker-developer hybrid rewrites reality through frames — sources confirm stories are engineered, never merely told.</div>
+  </div>
+
+  <div style="padding: 0 2rem;"><div class="rule-triple"></div></div>
+
+  <div class="hero-content">
+    <div class="hero-side">
+      <span class="side-label">Field Notes</span>
+      <hr class="rule-thin">
+      <div>
+        <div class="side-article-title">On the Language of Moving Images</div>
+        <p class="side-article-body">Every frame is a sentence. Every cut, a paragraph break. The grammar of cinema is the grammar of thought itself.</p>
+      </div>
+      <hr class="rule-thin">
+      <div>
+        <div class="side-article-title">The Web as Canvas, Not Container</div>
+        <p class="side-article-body">When a developer thinks like a director, interfaces become experiences. Pixels gain narrative weight.</p>
+      </div>
+      <hr class="rule-thin">
+      <div>
+        <span class="side-label">Editor's Note</span>
+        <p class="side-article-body">"The best stories are engineered in silence and detonated in public."</p>
+      </div>
+    </div>
+
+    <div class="hero-center">
+      <span class="hero-eyebrow">— Crème de la Special Dispatch —</span>
+      <h1 class="hero-headline">Theory of Frames.<br>Reality Rewritten.</h1>
+      <p class="hero-tagline">Stories aren't told. They're engineered.</p>
+      <div class="hero-roles">
+        <span>Filmmaker</span>
+        <span class="dot">·</span>
+        <span>Editor</span>
+        <span class="dot">·</span>
+        <span>Web Developer</span>
+      </div>
+      <div class="hero-btns">
+        <a href="#works" class="cta-btn">View Works</a>
+        <a href="#cta" class="cta-btn cta-btn-secondary">Collaborate</a>
+      </div>
+    </div>
+
+    <div class="hero-side">
+      <span class="side-label">Dispatches</span>
+      <hr class="rule-thin">
+      <div>
+        <div class="side-article-title">Midnight Telegram — Film Review</div>
+        <p class="side-article-body">A study in restraint. Silences carry more weight than words. ★★★★½</p>
+      </div>
+      <hr class="rule-thin">
+      <div>
+        <div class="side-article-title">Monsoon Cuts — Music Short</div>
+        <p class="side-article-body">Rhythm becomes image. An experiment dissolving the line between audio and visual. ★★★★</p>
+      </div>
+      <hr class="rule-thin">
+      <div>
+        <span class="side-label">Recently Published</span>
+        <p class="side-article-body">Frame — A Cutting Tool · Atelier Studio Site · Hours, Kept · Last Print Run</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="newspaper-section animate-section">
+    <div class="section-header">
+      <span class="section-label">— Feature · Profile of the Editor —</span>
+      <div class="rule-triple"></div>
+      <h2 class="section-headline">The Boy Who Engineered Stories</h2>
+      <div class="rule-triple"></div>
+      <p class="section-sub">Filed by the Editorial Desk, Since 2022</p>
+    </div>
+
+    <div class="about-grid">
+      <div class="anim-item">
+        <div class="about-photo">
+          <img src="1.jpg" alt="Tushar" onerror="this.parentElement.style.background='#d9c9a3'">
+        </div>
+        <p class="photo-caption">Tushar, photographed in available light.</p>
+      </div>
+
+      <div class="about-text anim-item anim-delay-2">
+        <span class="about-byline">By Our Own Correspondent · 2022–Present</span>
+        <hr class="rule">
+        <div class="about-body drop-cap">
+          <p>Long before he learned the grammar of frames, Tushar Ranjan Nayak (born 19 November 2006) was increasingly convinced that the world, as seen through a child’s eyes, held dimensions unreachable through ordinary language. Born in Old Town, Keonjhar, Odisha, India, to Sunil Ranjan Nayak and Jasmin Nayak, he was raised in a lower middle-class household where reality was practical—but his perception of it was not.
+
+His father, formerly an assistant postal GDS servant and now an auto rickshaw driver, and his mother, a homemaker, built a life grounded in resilience. Within that structure, Tushar began to notice something else entirely—in the flicker between shadow and tungsten, something crystallized: reality was not fixed. It could be reframed, re-sequenced, and re-felt.
+
+By the time he was old enough to hold a camera, he had already arrived at the idea of the self as narrative architect. The frame, not the eye, was the primary instrument. Every edit declared intention: this matters—this, and not that.
+
+Educated at SSVM Keonjhar (10th) and later at Dharanidhar Autonomous College, Keonjhar (+2), he is currently pursuing a Diploma in Computer Science Engineering at Government Polytechnic, Dhenkanal. But his real education began in 2022, when he stepped into filmmaking—not with resources, but with borrowed tools. A camera from a friend. A laptop passed around. Limitations became language.
+
+Those who encounter his work describe a peculiar sensation—the images seem to know something the audience does not, yet. There is structural intelligence beneath the warmth of the lens, a deliberate architecture hidden within what appears spontaneous.
+
+He learned code the same way he learned cinema: by breaking things with intention. The web became his second canvas. Interfaces turned into short films. User experience became emotional pacing.
+
+A Hindu by religion and belonging to the Jyotish caste, Tushar operates today at the intersection of filmmaker, editor, and web developer—not because the roles conveniently overlap, but because, in his theory, they were never separate. All three disciplines serve the same purpose: directing attention, engineering belief, and ultimately, rewriting what we call reality.</p>
+          <p>By the time he was old enough to hold a camera, Tu shar had already arrived at the idea of the <em>self as narrative architect</em>. The frame, not the eye, was the primary instrument. Every edit said: this matters. This, and not that.</p>
+          <p>Those who have encountered his work describe a peculiar sensation — that the images seem to know something the audience does not, yet. There is structural intelligence behind the warmth of the lens, deliberate architecture beneath what appears to be spontaneous capture.</p>
+          <p>He learned code the way he learned cinema: not through manuals, but through breaking things with intention. The web became a second canvas. Interfaces became short films. User experience became emotional pacing.</p>
+          <p>Today he operates at the intersection of filmmaker, editor, and web developer — not because the roles converge conveniently, but because in his theory, they were never separate. All three are in the business of directing attention, engineering belief, and rewriting what we call real.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="parallax-divider">
+  <div class="parallax-divider-text">"The best frame is the one the audience doesn't notice they're inside."</div>
+</div>
+
+<!-- WORKS -->
+<section id="works">
+  <div class="newspaper-section animate-section">
+    <div class="section-header">
+      <span class="section-label">— Section B · Selected Works —</span>
+      <div class="rule-triple"></div>
+      <h2 class="section-headline">Reels, Reviewed</h2>
+      <div class="rule-triple"></div>
+      <p class="section-sub">A curated dossier of select projects</p>
+    </div>
+
+    <div class="works-grid">
+      <div class="project-card anim-item anim-delay-1">
+        <div class="project-thumb">
+          <img src="2.jpg" alt="Midnight Telegram" onerror="this.style.display='none'">
+        </div>
+        <span class="project-label">Short Film · 2023</span>
+        <h3 class="project-title">Midnight Telegram</h3>
+        <p class="project-desc">A silent conversation between two strangers who share a train and a secret. Mood study in available light and compression.</p>
+        <span class="project-readmore">Read dispatch →</span>
+      </div>
+
+      <div class="project-card anim-item anim-delay-2">
+        <div class="project-thumb">
+          <img src="2.jpg" alt="Monsoon Cuts" onerror="this.style.display='none'">
+        </div>
+        <span class="project-label">Music Video · 2023</span>
+        <h3 class="project-title">Monsoon Cuts</h3>
+        <p class="project-desc">Rhythm visualized. An experiment where every edit lands on a frequency. The city breathes in sync with the beat.</p>
+        <span class="project-readmore">Read dispatch →</span>
+      </div>
+
+      <div class="project-card anim-item anim-delay-3">
+        <div class="project-thumb">
+          <img src="2.jpg" alt="Atelier" onerror="this.style.display='none'">
+        </div>
+        <span class="project-label">Web · 2024</span>
+        <h3 class="project-title">Atelier — Studio Site</h3>
+        <p class="project-desc">A digital atelier for an independent creative studio. Minimal interface, maximal atmosphere. Typography as architecture.</p>
+        <span class="project-readmore">Read dispatch →</span>
+      </div>
+
+      <div class="project-card anim-item anim-delay-1">
+        <div class="project-thumb">
+          <img src="2.jpg" alt="Hours Kept" onerror="this.style.display='none'">
+        </div>
+        <span class="project-label">Documentary · 2024</span>
+        <h3 class="project-title">Hours, Kept</h3>
+        <p class="project-desc">A meditation on routine and revelation. Ninety seconds that compress a year of daily rituals into a single feeling.</p>
+        <span class="project-readmore">Read dispatch →</span>
+      </div>
+
+      <div class="project-card anim-item anim-delay-2">
+        <div class="project-thumb">
+          <img src="2.jpg" alt="Last Print Run" onerror="this.style.display='none'">
+        </div>
+        <span class="project-label">Print · 2022</span>
+        <h3 class="project-title">Last Print Run</h3>
+        <p class="project-desc">A love letter to analogue media. Shot on expired film stock. The grain is not noise — it is memory made visible.</p>
+        <span class="project-readmore">Read dispatch →</span>
+      </div>
+
+      <div class="project-card anim-item anim-delay-3">
+        <div class="project-thumb">
+          <img src="2.jpg" alt="Frame Tool" onerror="this.style.display='none'">
+        </div>
+        <span class="project-label">Tool · Web · 2025</span>
+        <h3 class="project-title">Frame — A Cutting Tool</h3>
+        <p class="project-desc">Browser-based tool for visual editors. Designed on the premise that the interface should disappear so the work can emerge.</p>
+        <span class="project-readmore">Read dispatch →</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INSTAGRAM INSIGHTS -->
+<section id="insights">
+  <div class="newspaper-section animate-section">
+    <div class="section-header">
+      <span class="section-label">— Section C · By The Numbers —</span>
+      <div class="rule-triple"></div>
+      <h2 class="section-headline">Instagram, in Print</h2>
+      <div class="rule-triple"></div>
+      <p class="section-sub">Compiled from the account's annals · Structured for future API use</p>
+    </div>
+
+    <div class="insights-grid">
+      <div class="graph-box anim-item">
+        <div class="graph-title">Followers — Monthly Growth</div>
+        <div class="graph-meta">Jan–Jun 2024 · Units: followers gained</div>
+        <div class="bar-chart">
+          <div class="bar-wrap"><div class="bar" style="height:45%;animation-delay:0.1s"><span class="bar-value">+210</span></div><span class="bar-label">Jan</span></div>
+          <div class="bar-wrap"><div class="bar" style="height:58%;animation-delay:0.2s"><span class="bar-value">+290</span></div><span class="bar-label">Feb</span></div>
+          <div class="bar-wrap"><div class="bar" style="height:72%;animation-delay:0.3s"><span class="bar-value">+380</span></div><span class="bar-label">Mar</span></div>
+          <div class="bar-wrap"><div class="bar" style="height:65%;animation-delay:0.4s"><span class="bar-value">+340</span></div><span class="bar-label">Apr</span></div>
+          <div class="bar-wrap"><div class="bar" style="height:88%;animation-delay:0.5s"><span class="bar-value">+460</span></div><span class="bar-label">May</span></div>
+          <div class="bar-wrap"><div class="bar" style="height:100%;animation-delay:0.6s"><span class="bar-value">+530</span></div><span class="bar-label">Jun</span></div>
+        </div>
+        <div class="graph-stats-row">
+          <div class="graph-stat">
+            <span class="graph-stat-num">5.2k</span>
+            <span class="graph-stat-label">Total Followers</span>
+            <span class="graph-stat-delta">↑ +38% this period</span>
+          </div>
+          <div class="graph-stat">
+            <span class="graph-stat-num">368</span>
+            <span class="graph-stat-label">Avg Monthly Growth</span>
+            <span class="graph-stat-delta">↑ Steady climb</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="graph-box anim-item anim-delay-2">
+        <div class="graph-title">Engagement — Last Ten Posts</div>
+        <div class="graph-meta">Likes + Comments + Saves · Trailing 10 pieces</div>
+        <div class="line-graph-wrap">
+          <svg viewBox="0 0 300 140" preserveAspectRatio="none">
+            <line x1="0" y1="35" x2="300" y2="35" stroke="#b8a07a" stroke-width="0.5" stroke-dasharray="4,4"/>
+            <line x1="0" y1="70" x2="300" y2="70" stroke="#b8a07a" stroke-width="0.5" stroke-dasharray="4,4"/>
+            <line x1="0" y1="105" x2="300" y2="105" stroke="#b8a07a" stroke-width="0.5" stroke-dasharray="4,4"/>
+            <path d="M0,120 L33,100 L66,85 L100,95 L133,60 L166,70 L200,45 L233,55 L266,30 L300,20 L300,140 L0,140 Z" fill="rgba(26,18,9,0.08)"/>
+            <path d="M0,120 L33,100 L66,85 L100,95 L133,60 L166,70 L200,45 L233,55 L266,30 L300,20" fill="none" stroke="#1a1209" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="500" stroke-dashoffset="500">
+              <animate attributeName="stroke-dashoffset" from="500" to="0" dur="1.5s" begin="0.5s" fill="freeze"/>
+            </path>
+            <circle cx="0"   cy="120" r="3" fill="#1a1209"/>
+            <circle cx="33"  cy="100" r="3" fill="#1a1209"/>
+            <circle cx="66"  cy="85"  r="3" fill="#1a1209"/>
+            <circle cx="100" cy="95"  r="3" fill="#1a1209"/>
+            <circle cx="133" cy="60"  r="3" fill="#1a1209"/>
+            <circle cx="166" cy="70"  r="3" fill="#1a1209"/>
+            <circle cx="200" cy="45"  r="3" fill="#1a1209"/>
+            <circle cx="233" cy="55"  r="3" fill="#1a1209"/>
+            <circle cx="266" cy="30"  r="4" fill="#7a5c38"/>
+            <circle cx="300" cy="20"  r="4" fill="#7a5c38"/>
+          </svg>
+        </div>
+        <div class="graph-stats-row">
+          <div class="graph-stat">
+            <span class="graph-stat-num">11.4%</span>
+            <span class="graph-stat-label">Avg Engagement Rate</span>
+            <span class="graph-stat-delta">↑ Above industry</span>
+          </div>
+          <div class="graph-stat">
+            <span class="graph-stat-num">182k</span>
+            <span class="graph-stat-label">Total Impressions</span>
+            <span class="graph-stat-delta">↑ +24% last 30 days</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PHOTO FEED -->
+<section id="feed">
+  <div class="newspaper-section animate-section">
+    <div class="section-header">
+      <span class="section-label">— Section D · From the Field —</span>
+      <div class="rule-triple"></div>
+      <h2 class="section-headline">From the Field</h2>
+      <div class="rule-triple"></div>
+      <p class="section-sub">A selection of frames from the ongoing archive</p>
+    </div>
+    <div class="feed-grid">
+      <div class="feed-item anim-item"><img src="3.jpg" alt="" onerror="this.style.display='none'"></div>
+      <div class="feed-item anim-item anim-delay-1"><img src="4.jpg" alt="" onerror="this.style.display='none'"></div>
+      <div class="feed-item anim-item anim-delay-2"><img src="5.jpg" alt="" onerror="this.style.display='none'"></div>
+      <div class="feed-item anim-item anim-delay-3"><img src="6.jpg" alt="" onerror="this.style.display='none'"></div>
+      <div class="feed-item anim-item anim-delay-1"><img src="7.jpg" alt="" onerror="this.style.display='none'"></div>
+      <div class="feed-item anim-item anim-delay-2"><img src="8.jpg" alt="" onerror="this.style.display='none'"></div>
+      <div class="feed-item anim-item anim-delay-3"><img src="9.jpg" alt="" onerror="this.style.display='none'"></div>
+      <div class="feed-item anim-item anim-delay-4"><img src="10.jpg" alt="" onerror="this.style.display='none'"></div>
+    </div>
+  </div>
+</section>
+
+<!-- SHORT FILMS -->
+<section id="films">
+  <div class="newspaper-section animate-section">
+    <div class="section-header">
+      <span class="section-label">— Section E · Cinema Reviews —</span>
+      <div class="rule-triple"></div>
+      <h2 class="section-headline">Short Films, Screened</h2>
+      <div class="rule-triple"></div>
+      <p class="section-sub">Select works from the archive, now in exhibition</p>
+    </div>
+    <div class="films-grid">
+      <div class="film-card anim-item">
+        <div class="film-frame">
+          <div class="play-btn"></div>
+          <div style="width:100%;height:100%;background:linear-gradient(135deg,#1a1209 0%,#3d2f1a 100%);display:flex;align-items:center;justify-content:center;">
+            <span style="font-family:var(--font-headline);font-size:1rem;color:rgba(244,236,216,0.3);letter-spacing:0.2em;text-transform:uppercase;">Midnight Telegram</span>
+          </div>
+        </div>
+        <div class="film-rating">
+          <div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star empty"></div>
+        </div>
+        <h3 class="film-title">Midnight Telegram</h3>
+        <div class="film-meta">Short Film · 2023 · Dir. Tushar</div>
+        <p class="film-review">A small film of considerable nerve. The director achieves something unusual: the silence is not absence but substance. Every frame withholds just enough to make you lean forward. Heartily recommended for those who trust a filmmaker to know when not to speak.</p>
+        <div style="font-size:0.65rem;color:var(--ink-light);letter-spacing:0.1em;margin-top:0.8rem;">★★★★ — EDITORIAL REVIEW 1</div>
+      </div>
+
+      <div class="film-card anim-item anim-delay-2">
+        <div class="film-frame">
+          <div class="play-btn"></div>
+          <div style="width:100%;height:100%;background:linear-gradient(135deg,#0d1a24 0%,#1a3040 100%);display:flex;align-items:center;justify-content:center;">
+            <span style="font-family:var(--font-headline);font-size:1rem;color:rgba(244,236,216,0.3);letter-spacing:0.2em;text-transform:uppercase;">Monsoon Cuts</span>
+          </div>
+        </div>
+        <div class="film-rating">
+          <div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star empty"></div>
+        </div>
+        <h3 class="film-title">Monsoon Cuts</h3>
+        <div class="film-meta">Music Video · 2023 · Dir. Tushar</div>
+        <p class="film-review">An inventory of rhythms that concerns itself with the marriage of image and frequency. A display that consistently merges engagement with rigour. The practice of building something that contains more than it shows — a study only the most convinced will attempt.</p>
+        <div style="font-size:0.65rem;color:var(--ink-light);letter-spacing:0.1em;margin-top:0.8rem;">★★★★ — EDITORIAL REVIEW 2</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="parallax-divider">
+  <div class="parallax-divider-text">"Every edit is a declaration. This, and not that."</div>
+</div>
+
+<!-- CTA -->
+<section id="cta">
+  <div style="padding: 4rem 2rem;" class="animate-section">
+    <div class="cta-inner">
+      <span class="cta-eyebrow">— Editorial Commission —</span>
+      <div class="cta-stamp">
+        <div class="cta-stamp-inner">Open<br>for<br>Work</div>
+      </div>
+      <hr class="rule">
+      <h2 class="cta-headline">Let's Create Something<br>That Rewrites Reality.</h2>
+      <hr class="rule" style="margin: 1rem 0;">
+      <p class="cta-sub">Collaborations, commissions, and joint adventures — openly welcome.</p>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;">
+        <a href="mailto:hello@tusharstheory.com" class="cta-btn">Send a Telegram</a>
+        <a href="#works" class="cta-btn cta-btn-secondary">View Archive</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <span class="footer-masthead">Tushar's Theory</span>
+    <hr class="footer-rule">
+    <p class="footer-tagline">Printed in the mind. Distributed digitally.</p>
+    <div class="footer-links">
+      <a href="#">Instagram</a>
+      <a href="#">Vimeo</a>
+      <a href="#">GitHub</a>
+      <a href="#">LinkedIn</a>
+      <a href="#">Contact</a>
+    </div>
+    <hr class="footer-rule">
+    <p class="footer-credit">© 2022–2026 Tushar's Theory · Vol. IV · All frames reserved · Theory of Frames, Reality Rewritten</p>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   ✏️  EASY CUSTOMIZATION
+   Change only the values inside CONFIG to re-use this page
+   for someone else. Everything else updates automatically.
+============================================================ */
+const CONFIG = {
+  name:    "Tushar's Theory",          // ← site / brand name
+  since:   "2022",                     // ← founding year
+  tagline: "Stories aren't told. They're engineered.",
+  email:   "beingrealtushar@gmail.com",  // ← contact email
+};
+/* ============================================================ */
+
+
+/* ── Apply CONFIG to the page ─────────────────────────────── */
+function applyConfig() {
+  document.title = `${CONFIG.name} — Since ${CONFIG.since}`;
+
+  // Name elements
+  document.querySelectorAll('.masthead-name, .footer-masthead, #intro-brand')
+    .forEach(el => el.textContent = CONFIG.name);
+
+  // "Since YYYY" elements
+  document.querySelectorAll('.masthead-since')
+    .forEach(el => el.textContent = `Since ${CONFIG.since}`);
+  const isince = document.getElementById('intro-since');
+  if (isince) isince.textContent = `Est. ${CONFIG.since}`;
+
+  // Tagline
+  const tg = document.querySelector('.hero-tagline');
+  if (tg) tg.textContent = CONFIG.tagline;
+
+  // Email links
+  document.querySelectorAll('a[href^="mailto:"]')
+    .forEach(a => a.href = `mailto:${CONFIG.email}`);
+
+  // Footer copyright line
+  const credit = document.querySelector('.footer-credit');
+  if (credit) {
+    credit.textContent = `© ${CONFIG.since}–2026 ${CONFIG.name} · Vol. IV · All frames reserved · Theory of Frames, Reality Rewritten`;
+  }
+}
+
+
+/* ── Scroll-reveal ─────────────────────────────────────────── */
+function initScrollAnimations() {
+  const els = document.querySelectorAll('.animate-section, .anim-item');
+  const io  = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+  els.forEach(el => io.observe(el));
+}
+
+
+/* ── Video Burn Intro ──────────────────────────────── */
+function initIntro() {
+  const overlay    = document.getElementById('intro-overlay');
+  const paper      = document.getElementById('intro-paper');
+  const canvas     = document.getElementById('burn-canvas');
+  const skipBtn    = document.getElementById('skip-intro');
+  const introBrand = document.getElementById('intro-brand');
+  const introSince = document.getElementById('intro-since');
+  if (!overlay || !canvas) return;
+
+  document.body.style.overflow = 'hidden';
+
+  const ctx = canvas.getContext('2d');
+  let W, H, animId;
+  let started = false;
+  let done = false;
+
+  // ── Resize canvas ─────────────────────────────────
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // ── Burn state: per-column burn height map ─────────
+  // burnY[x] = how many pixels from top have been burned (paper removed)
+  // We work at reduced resolution for speed, then scale up
+  const RES = 3; // pixels per cell
+  let cols, rows, burnY, charY, emberY;
+
+  function initBurnMap() {
+    cols = Math.ceil(W / RES);
+    rows = Math.ceil(H / RES);
+    burnY  = new Float32Array(cols).fill(rows + 5); // start below screen (nothing burned)
+    charY  = new Float32Array(cols).fill(rows + 5); // char edge (dark brown just behind burn)
+    emberY = new Float32Array(cols).fill(rows + 5);
+  }
+  initBurnMap();
+
+  // ── Embers / sparks ───────────────────────────────
+  const embers = [];
+  function spawnEmbers(x, y, n) {
+    for (let i = 0; i < n; i++) {
+      embers.push({
+        x: x + (Math.random() - 0.5) * 30,
+        y: y,
+        vx: (Math.random() - 0.5) * 2.5,
+        vy: -Math.random() * 3 - 1,
+        r: Math.random() * 2.5 + 0.5,
+        life: 1,
+        decay: Math.random() * 0.025 + 0.012,
+        color: `hsl(${25 + Math.random()*30},100%,${55 + Math.random()*25}%)`,
+      });
+    }
+  }
+
+  // ── Flame particles floating up ───────────────────
+  const flames = [];
+  function spawnFlame(x, y) {
+    flames.push({
+      x, y,
+      vx: (Math.random() - 0.5) * 1.2,
+      vy: -Math.random() * 2.5 - 0.8,
+      size: Math.random() * 18 + 8,
+      life: 1,
+      decay: Math.random() * 0.03 + 0.018,
+      hue: Math.random() * 30 + 10,
+    });
+  }
+
+  // ── Main burn wave logic ───────────────────────────
+  // Burn spreads from a single ignition point, propagating downward and sideways
+  let ignX = Math.floor(cols / 2); // center start
+  let burnPhase = 0; // 0=dark intro, 1=burning, 2=done
+  let burnSpeed = 0; // pixels per frame
+
+  // Wave front: for each column, target burn row that spreads outward
+  let waveFront = new Float32Array(cols).fill(0);
+  let waveFrontSet = false;
+
+  function startBurn() {
+    if (started) return;
+    started = true;
+    burnPhase = 1;
+
+    // Brand glows as fire reveals below
+    introBrand.classList.add('lit');
+    introSince.classList.add('lit');
+
+    // Ignition point: center-top of screen
+    const cx = Math.floor(cols / 2);
+    const startRow = 0;
+    for (let dx = -2; dx <= 2; dx++) {
+      const c = cx + dx;
+      if (c >= 0 && c < cols) {
+        waveFront[c] = startRow;
+      }
+    }
+    waveFrontSet = true;
+    burnSpeed = 0.6;
+  }
+
+  // ── Noise helper for organic edges ────────────────
+  function noise(x, t) {
+    return Math.sin(x * 0.18 + t * 1.3) * 0.5
+         + Math.sin(x * 0.41 + t * 0.7) * 0.3
+         + Math.sin(x * 0.07 + t * 2.1) * 0.2;
+  }
+
+  // ── Draw frame ────────────────────────────────────
+  let t = 0;
+  let coverageRatio = 0;
+
+  function draw() {
+    if (done) return;
+    animId = requestAnimationFrame(draw);
+    t += 0.016;
+
+    ctx.clearRect(0, 0, W, H);
+
+    if (burnPhase === 1 && waveFrontSet) {
+      // Accelerate burn over time
+      burnSpeed = Math.min(burnSpeed + 0.012, 3.5);
+
+      // Spread wave outward from center, then downward
+      const cx = Math.floor(cols / 2);
+      for (let c = 0; c < cols; c++) {
+        const dist = Math.abs(c - cx);
+        // Wave front propagates: center first, sides lag by distance
+        const lag = dist * 0.6;
+        const target = Math.max(0, (t * 60 * burnSpeed) - lag);
+        // Add organic noise to burn edge
+        const n = noise(c, t) * 8;
+        waveFront[c] = Math.min(target + n, rows + 2);
+
+        // burnY = leading bright edge
+        burnY[c]  = waveFront[c];
+        // charY  = trailing dark char zone (a few rows behind)
+        charY[c]  = Math.max(0, waveFront[c] - 3 - Math.abs(noise(c + 50, t)) * 4);
+        // emberY = where embers spawn
+        emberY[c] = waveFront[c];
+      }
+
+      // Count how much is burned
+      let burnedCols = 0;
+      for (let c = 0; c < cols; c++) {
+        if (burnY[c] >= rows) burnedCols++;
+      }
+      coverageRatio = burnedCols / cols;
+
+      // Spawn flames along burn front
+      if (Math.random() < 0.7) {
+        const fc = Math.floor(Math.random() * cols);
+        const fy = burnY[fc];
+        if (fy > 0 && fy < rows) {
+          spawnFlame(fc * RES, fy * RES);
+          if (Math.random() < 0.15) spawnEmbers(fc * RES, fy * RES, 2);
+        }
+      }
+
+      // ── Draw paper remaining ───────────────────────
+      // Draw paper as an image data layer for performance
+      const imageData = ctx.createImageData(W, H);
+      const data = imageData.data;
+
+      for (let c = 0; c < cols; c++) {
+        const burnRow = burnY[c];
+        const charRow = charY[c];
+
+        for (let r = 0; r < rows; r++) {
+          const px = c * RES;
+          const py = r * RES;
+
+          let fillR, fillG, fillB, fillA;
+
+          if (r > burnRow) {
+            // Fully burned — transparent (dark bg shows through)
+            fillR = 0; fillG = 0; fillB = 0; fillA = 0;
+          } else if (r > charRow) {
+            // Char zone — dark brown to black near the edge
+            const f = (r - charRow) / Math.max(1, burnRow - charRow);
+            fillR = Math.floor(30 + f * 80);
+            fillG = Math.floor(10 + f * 30);
+            fillB = Math.floor(0 + f * 5);
+            fillA = Math.floor(255 * (1 - f * 0.4));
+          } else {
+            // Intact paper
+            const n2 = noise(c + r * 0.3, t * 0.1) * 8;
+            fillR = 244 + n2;
+            fillG = 236 + n2 * 0.8;
+            fillB = 216 + n2 * 0.5;
+            fillA = 255;
+
+            // Warm glow near char edge
+            const d = charRow - r;
+            if (d < 6) {
+              const glow = 1 - d / 6;
+              fillR = Math.min(255, fillR + glow * 80);
+              fillG = Math.min(255, fillG + glow * 30);
+              fillB = Math.max(0, fillB - glow * 30);
+            }
+          }
+
+          // Fill RES×RES block
+          for (let dy = 0; dy < RES && py + dy < H; dy++) {
+            for (let dx = 0; dx < RES && px + dx < W; dx++) {
+              const idx = ((py + dy) * W + (px + dx)) * 4;
+              data[idx]   = Math.min(255, Math.max(0, fillR));
+              data[idx+1] = Math.min(255, Math.max(0, fillG));
+              data[idx+2] = Math.min(255, Math.max(0, fillB));
+              data[idx+3] = fillA;
+            }
+          }
+        }
+      }
+      ctx.putImageData(imageData, 0, 0);
+
+      // ── Glowing burn edge line ─────────────────────
+      ctx.save();
+      for (let c = 0; c < cols - 1; c++) {
+        const x1 = c * RES, y1 = burnY[c] * RES;
+        const x2 = (c + 1) * RES, y2 = burnY[c + 1] * RES;
+        if (y1 < 0 || y1 > H) continue;
+
+        // Inner white-hot edge
+        ctx.beginPath();
+        ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+        ctx.strokeStyle = 'rgba(255,250,200,0.9)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Outer orange glow
+        ctx.beginPath();
+        ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+        ctx.strokeStyle = 'rgba(255,140,20,0.35)';
+        ctx.lineWidth = 8;
+        ctx.stroke();
+
+        // Outer ambient
+        ctx.beginPath();
+        ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+        ctx.strokeStyle = 'rgba(255,80,0,0.12)';
+        ctx.lineWidth = 20;
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    // ── Draw flames ────────────────────────────────
+    for (let i = flames.length - 1; i >= 0; i--) {
+      const f = flames[i];
+      f.x  += f.vx + (noise(i, t) * 0.5);
+      f.y  += f.vy;
+      f.vx += (Math.random() - 0.5) * 0.3;
+      f.life -= f.decay;
+      if (f.life <= 0) { flames.splice(i, 1); continue; }
+
+      const alpha = f.life * 0.85;
+      const size  = f.size * f.life;
+      const grad  = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, size);
+      grad.addColorStop(0, `hsla(${f.hue + 30},100%,90%,${alpha})`);
+      grad.addColorStop(0.3, `hsla(${f.hue + 15},100%,65%,${alpha * 0.8})`);
+      grad.addColorStop(0.7, `hsla(${f.hue},90%,40%,${alpha * 0.4})`);
+      grad.addColorStop(1, `hsla(${f.hue},80%,20%,0)`);
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, size, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
+      ctx.fill();
+    }
+
+    // ── Draw embers ────────────────────────────────
+    for (let i = embers.length - 1; i >= 0; i--) {
+      const e = embers[i];
+      e.x  += e.vx;
+      e.y  += e.vy;
+      e.vy += 0.06; // gravity
+      e.vx *= 0.99;
+      e.life -= e.decay;
+      if (e.life <= 0) { embers.splice(i, 1); continue; }
+
+      ctx.beginPath();
+      ctx.arc(e.x, e.y, e.r * e.life, 0, Math.PI * 2);
+      ctx.fillStyle = e.color.replace(')', `,${e.life})`).replace('hsl', 'hsla');
+      ctx.fill();
+    }
+
+    // ── End condition ──────────────────────────────
+    if (burnPhase === 1 && coverageRatio > 0.96) {
+      introBrand.classList.add('ember');
+      burnPhase = 2;
+      setTimeout(endIntro, 800);
+    }
+  }
+
+  function endIntro() {
+    if (done) return;
+    done = true;
+    cancelAnimationFrame(animId);
+    window.removeEventListener('resize', resize);
+    overlay.style.transition = 'opacity 0.7s ease';
+    overlay.style.opacity = '0';
+    document.body.style.overflow = '';
+    setTimeout(() => overlay.remove(), 700);
+  }
+
+  skipBtn.addEventListener('click', endIntro);
+
+  // Phase 1: dark for 1s, then ignite
+  draw();
+  setTimeout(startBurn, 1000);
+}
+
+
+/* ── Boot ─────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  applyConfig();
+  initIntro();
+  initScrollAnimations();
+});
+</script>
+</body>
+</html>
